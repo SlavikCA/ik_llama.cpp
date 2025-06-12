@@ -32,9 +32,9 @@ jobs:
       run: |
         docker build \
           -f .devops/llama-server-cuda.Dockerfile \
-          -t ghcr.io/${{ github.repository_owner }}/ik_llama.cpp-cuda:latest \
+          -t ghcr.io/slavikca/ik_llama.cpp-cuda:latest \
           .
 
     - name: Push Docker image to GHCR
       run: |
-        docker push ghcr.io/${{ github.repository_owner }}/ik_llama.cpp-cuda:latest
+        docker push ghcr.io/slavikca/ik_llama.cpp-cuda:latest
