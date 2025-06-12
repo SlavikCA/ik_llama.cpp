@@ -1,0 +1,40 @@
+name: Build & Publish CUDA Docker Image
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.devops/llama-server-cuda.Dockerfile'
+      - 'src/**'
+      - 'Dockerfile'
+      - '.github/workflows/docker-publish-cuda.yml'
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Log in to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build Docker image (CUDA)
+      run: |
+        docker build \
+          -f .devops/llama-server-cuda.Dockerfile \
+          -t ghcr.io/${{ github.repository_owner }}/ik_llama.cpp-cuda:latest \
+          .
+
+    - name: Push Docker image to GHCR
+      run: |
+        docker push ghcr.io/${{ github.repository_owner }}/ik_llama.cpp-cuda:latest
